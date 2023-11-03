@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Post Detail</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- 부트스트랩 css 추가 -->
+    <link rel="stylesheet" href="/css/lib/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <!-- 게시글 제목과 내용 표시 -->
+    <div class="mb-3">
+        <label class="form-label">제목</label>
+        <input type="text" class="form-control" id="" name="" th:value="${post.subject}">
+    </div>
+    <div class="mb-3">
+        <label class="form-label">내용</label>
+        <textarea class="form-control" rows="5" cols="" name="" th:text="${post.content}"></textarea>
+    </div>
+    <div class="my-3">
+        <!-- 게시글 수정 및 삭제 링크 -->
+        <a th:href="@{|/post/update/${post.id}|}" class="btn btn-sm btn-outline-secondary">수정</a>
+        <a th:href="@{|/post/delete/${post.id}|}" class="btn btn-sm btn-outline-secondary">삭제</a>
+    </div>
+
+    <!-- 댓글 목록 표시 -->
+    <!-- 댓글 목록 표시 -->
+    <div class="my-4">
+        <h2 style="font-size: 16px;">Comment List</h2>
+        <ul class="list-group">
+            <li class="list-group-item" th:each="comment : ${post.commentList}">
+                <div class="mb-2">
+                    <span>작성자: <span th:text="${comment.author}"></span></span>
+                    <span class="ml-2">작성일: <span th:text="${#temporals.format(comment.createdDate, 'yyyy-MM-dd HH:mm')}"></span></span>
+                    <span class="ml-2">수정일: <span th:text="${#temporals.format(comment.updatedDate, 'yyyy-MM-dd HH:mm')}"></span></span>
+                    <div class="my-3">
+                        <!-- 댓글 수정 및 삭제 링크 -->
+                        <a th:href="@{|/comment/create/${comment.id}|}" class="btn btn-sm btn-outline-secondary">수정</a>
+                        <a th:href="@{|/comment/delete/${comment.id}|}" class="btn btn-sm btn-outline-secondary">삭제</a>
+                    </div>
+                </div>
+                <span th:text="${comment.content}"></span>
+            </li>
+        </ul>
+    </div>
+
+
+    <!-- 댓글 작성 폼 -->
+    <h2 style="font-size: 16px;">Comment Form</h2>
+    <form th:action="@{|/comment/create/${post.id}|}" th:object="${commentRequest}" method="post" class="my-3">
+        <div class="alert alert-danger" role="alert" th:if="${#fields.hasAnyErrors()}">
+            <div th:each="err : ${#fields.allErrors()}" th:text="${err}"></div>
+        </div>
+        <div class="form-group">
+            <textarea th:field="*{content}" class="form-control"></textarea>
+        </div>
+        <div class="d-flex">
+            <button type="submit" class="btn btn-primary">댓글 등록</button>
+            <button type="button" class="btn btn-success ml-2" onclick="javascript:location.href='/post/listPage'">
+                목록으로
+            </button>
+        </div>
+    </form>
+</div>
+
+<!-- 부트스트랩 js, jquery 추가 -->
+<script src="/js/lib/jquery.min.js"></script>
+<script src="/js/lib/bootstrap.min.js"></script>
+</body>
+</html>
