@@ -8,9 +8,13 @@ import com.example.boardex.data.entity.Post;
 import com.example.boardex.repository.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -25,6 +29,20 @@ public class CommentService {
         return modelMapper.map(comment, CommentResponse.class);
     }
 
+    //list
+    public Page<CommentResponse> getList(Integer postId, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page - 1, size, Sort.by(Sort.Direction.DESC, "createdDate"));
+        Page<Comment> commentPage = commentRepository.findByPostId(postId, pageRequest);
+
+        if (commentPage.isEmpty()) {
+            throw new DataNotFoundException("댓글이 없습니다.");
+        }
+
+        return commentPage.map(this::of);
+    }
+
+
+
     public CommentResponse create(PostResponse postResponse, String content) {
         CommentResponse commentResponse = new CommentResponse();
         commentResponse.setContent(content);
@@ -33,26 +51,23 @@ public class CommentService {
         Comment comment = of(commentResponse);
         comment = this.commentRepository.save(comment);
         commentResponse.setId(comment.getId());
+        System.out.println("comment service: create");
         return commentResponse;
     }
 
     public CommentResponse getComment(Integer id) {
         Optional<Comment> comment = this.commentRepository.findById(id);
+        System.out.println("comment service: getComment");
         if (comment.isPresent()) {
             return  of(comment.get());
         }else {
             throw new DataNotFoundException("해당 게시글이 없습니다");
         }
+
     }
 
     //update
-    public CommentResponse update(CommentResponse commentResponse, String content) {
-        commentResponse.setContent(content);
-        commentResponse.setUpdatedDate(LocalDateTime.now());
-        Comment comment = of(commentResponse);
-        this.commentRepository.save(comment);
-        return commentResponse;
-    }
+
 
     public void delete(CommentResponse commentResponse) {
         this.commentRepository.deleteById(commentResponse.getId());

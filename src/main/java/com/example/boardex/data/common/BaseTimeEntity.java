@@ -21,7 +21,7 @@ public abstract class BaseTimeEntity {
     private LocalDateTime createdDate;
     //수정일시
     @Column
-    private LocalDateTime updatedDate;
+    private LocalDateTime modifiedDate;
     //PrePersist
     //JPA entity가 insert 되기 전에 실행할 메서드
     @PrePersist
@@ -32,6 +32,6 @@ public abstract class BaseTimeEntity {
     //JPA entity가 update 되기 전에 실행할 메서드
     @PreUpdate
     public void preUpdate() {
-        this.updatedDate = LocalDateTime.now();
+        this.modifiedDate = LocalDateTime.now();
     }
 }

@@ -75,7 +75,7 @@ public class PostService {
     public PostResponse update(PostResponse postResponse, String subject, String content) {
         postResponse.setSubject(subject);
         postResponse.setContent(content);
-        postResponse.setUpdatedDate(LocalDateTime.now());
+        postResponse.setModifiedDate(LocalDateTime.now());
         Post post = of(postResponse);
         this.pr.save(post);
         return postResponse;

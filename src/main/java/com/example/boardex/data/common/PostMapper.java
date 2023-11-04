@@ -13,7 +13,7 @@ public class PostMapper implements EntityMapper<PostRequest, Post> {
         post.setSubject(postRequest.getSubject());
         post.setContent(post.getContent());
         post.setCreatedDate(post.getCreatedDate());
-        post.setUpdatedDate(post.getUpdatedDate());
+        post.setModifiedDate(post.getModifiedDate());
         return post;
     }
 }

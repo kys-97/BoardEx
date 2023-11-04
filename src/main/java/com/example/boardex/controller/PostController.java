@@ -67,7 +67,7 @@ public class PostController {
         return "postUpdate";
     }
 
-    @PutMapping ("update/{id}")
+    @PostMapping ("update/{id}")
     public String postUpdate(@Valid PostRequest postRequest, BindingResult bindingResult, @PathVariable("id") Integer id) {
         if (bindingResult.hasErrors()) {
             return "postUpdate";
@@ -76,6 +76,7 @@ public class PostController {
         this.postService.update(postResponse, postRequest.getSubject(), postRequest.getContent());
         return String.format("redirect:/post/detail/%s", id);   // 현재 요청을 /post/detail/{id}로 리디렉션
     }
+
 
 
     @GetMapping("/delete/{id}")
